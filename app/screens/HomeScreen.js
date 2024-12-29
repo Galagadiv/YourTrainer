@@ -1,23 +1,20 @@
 import {
 	SafeAreaView,
+	ScrollView,
 	StyleSheet,
 	Text,
 	TouchableOpacity,
 	View,
 } from "react-native";
 import React, {useState, useCallback} from "react";
-import {SQLiteProvider, useSQLiteContext} from "expo-sqlite";
+import {useSQLiteContext} from "expo-sqlite";
 import {useNavigation, useFocusEffect} from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import {initializeDB} from "../database/database";
 
 export default function HomeScreen() {
-	return (
-		<SQLiteProvider databaseName="defaultDB.db" onInit={initializeDB}>
-			<ClientList />
-		</SQLiteProvider>
-	);
+	return <ClientList />;
 }
 
 export function ClientList() {
@@ -43,31 +40,45 @@ export function ClientList() {
 			console.log("error", error);
 		}
 	};
+	const viewData = async (id) => {
+		try {
+			navigation.navigate("Client", {id});
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
 	const FirstToLast = "SELECT * FROM Users";
 	const LastToFirst = "SELECT * FROM Users ORDER BY id DESC";
 
+	// console.log(navigation.getState().routes.length); // Виводить кількість екранів в стеку
 	return (
 		<SafeAreaView style={styles.field}>
-			<View>
-				{/* Чому не працює частина пустого списку? */}
-				{Array.isArray(clientList) && clientList.length > 0 ? (
-					clientList.map((item, index) => {
+			{/* Чому не працює частина пустого списку? */}
+			{Array.isArray(clientList) && clientList.length > 0 ? (
+				<ScrollView>
+					{clientList.map((item, index) => {
 						return (
-							<View key={index} style={styles.item}>
+							<TouchableOpacity
+								key={index}
+								style={styles.item}
+								onPress={() => viewData(item.id)}
+							>
 								<Text style={styles.itemName}>{item.name}</Text>
 								<Text style={styles.itemDate}>{item.created_at}</Text>
-							</View>
+							</TouchableOpacity>
 						);
-					})
-				) : (
-					<View style={styles.emptyList}>
-						<Text style={styles.itemName}>Список клієнтів порожній</Text>
-					</View>
-				)}
-			</View>
+					})}
+				</ScrollView>
+			) : (
+				<View style={styles.emptyList}>
+					<Text style={styles.itemName}>Список клієнтів порожній</Text>
+				</View>
+			)}
+
 			<TouchableOpacity
 				style={styles.addClientButton}
-				onPress={() => navigation.navigate("Client")} // додивитися цей момент
+				onPress={() => navigation.navigate("Client", {id: undefined})} // додивитися цей момент
 			>
 				<Text style={styles.addClientButtonText}>+</Text>
 			</TouchableOpacity>
@@ -116,11 +127,14 @@ const styles = StyleSheet.create({
 		width: 60,
 		height: 60,
 		borderRadius: 15,
-		justifyContent: "center",
 		alignItems: "center",
+		justifyContent: "center",
 	},
 	addClientButtonText: {
 		color: white,
 		fontSize: 50,
+		lineHeight: 60,
+		includeFontPadding: false,
+		textAlignVertical: "center",
 	},
 });
