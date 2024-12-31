@@ -4,10 +4,10 @@ import {View, Text} from "react-native";
 import {NavigationContainer} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 
-import HomeScreen from "./app/screens/HomeScreen";
-import ClientScreen from "./app/screens/ClientScreen";
-import {initializeDB} from "./app/database/database";
-import {SQLiteProvider, useSQLiteContext} from "expo-sqlite";
+import HomeScreen from "~/screens/HomeScreen";
+import ClientScreen from "~/screens/ClientScreen";
+import {initializeDB} from "~/database/database";
+import {SQLiteProvider} from "expo-sqlite";
 
 const Stack = createNativeStackNavigator();
 

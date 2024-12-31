@@ -20,7 +20,7 @@ import {
 	insertInto,
 	deleteById,
 	updateById,
-} from "../../database/database";
+} from "~/database/database";
 
 export function InsertName({id}) {
 	const db = useSQLiteContext();

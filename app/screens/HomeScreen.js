@@ -18,7 +18,7 @@ import {
 	insertInto,
 	deleteById,
 	updateById,
-} from "../database/database";
+} from "~/database/database";
 
 export default function HomeScreen() {
 	return <ClientList />;
