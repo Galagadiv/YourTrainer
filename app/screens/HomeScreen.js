@@ -11,7 +11,14 @@ import {useSQLiteContext} from "expo-sqlite";
 import {useNavigation, useFocusEffect} from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import {initializeDB} from "../database/database";
+import {
+	fetchAll,
+	fetchById,
+	fetchColumnById,
+	insertInto,
+	deleteById,
+	updateById,
+} from "../database/database";
 
 export default function HomeScreen() {
 	return <ClientList />;
@@ -25,21 +32,18 @@ export function ClientList() {
 	useFocusEffect(
 		useCallback(() => {
 			(async () => {
-				// console.log("db object:", db);
-				await fetchClients();
-				// console.log("fetching notes");
+				try {
+					const clients = await fetchAll(db, "Clients");
+					setClientList(clients);
+					// console.log("Fetched clients:", clients);
+				} catch (error) {
+					console.error("Error fetching clients:", error);
+					Alert.alert("Помилка", "Не вдалося завантажити список клієнтів");
+				}
 			})();
-		}, [])
+		}, [db])
 	);
 
-	const fetchClients = async () => {
-		try {
-			const results = await db.getAllAsync(FirstToLast);
-			setClientList(results);
-		} catch (error) {
-			console.log("error", error);
-		}
-	};
 	const viewData = async (id) => {
 		try {
 			navigation.navigate("Client", {id});
@@ -48,8 +52,8 @@ export function ClientList() {
 		}
 	};
 
-	const FirstToLast = "SELECT * FROM Users";
-	const LastToFirst = "SELECT * FROM Users ORDER BY id DESC";
+	const FirstToLast = "SELECT * FROM Clients";
+	const LastToFirst = "SELECT * FROM Clients ORDER BY id DESC";
 
 	// console.log(navigation.getState().routes.length); // Виводить кількість екранів в стеку
 	return (
@@ -57,18 +61,16 @@ export function ClientList() {
 			{/* Чому не працює частина пустого списку? */}
 			{Array.isArray(clientList) && clientList.length > 0 ? (
 				<ScrollView>
-					{clientList.map((item, index) => {
-						return (
-							<TouchableOpacity
-								key={index}
-								style={styles.item}
-								onPress={() => viewData(item.id)}
-							>
-								<Text style={styles.itemName}>{item.name}</Text>
-								<Text style={styles.itemDate}>{item.created_at}</Text>
-							</TouchableOpacity>
-						);
-					})}
+					{clientList.map((item) => (
+						<TouchableOpacity
+							key={item.id}
+							style={styles.item}
+							onPress={() => viewData(item.id)}
+						>
+							<Text style={styles.itemName}>{item.name}</Text>
+							<Text style={styles.itemDate}>{item.created_at}</Text>
+						</TouchableOpacity>
+					))}
 				</ScrollView>
 			) : (
 				<View style={styles.emptyList}>
