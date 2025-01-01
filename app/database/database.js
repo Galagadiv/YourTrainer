@@ -2,6 +2,8 @@
 import * as SQLite from "expo-sqlite";
 import {useSQLiteContext} from "expo-sqlite";
 
+import {useCalendarLocale} from "~/assets/localization/locale";
+
 const db = SQLite.openDatabaseAsync("defaultDB.db");
 
 export const initializeDB = async () => {
@@ -17,6 +19,7 @@ export const initializeDB = async () => {
             created_at TEXT
             );      
         `);
+		useCalendarLocale(); // Виклик локалізації календаря
 		console.log("DB connection success");
 	} catch (error) {
 		console.log("error", error);

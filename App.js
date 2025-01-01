@@ -6,6 +6,8 @@ import {createNativeStackNavigator} from "@react-navigation/native-stack";
 
 import HomeScreen from "~/screens/HomeScreen";
 import ClientScreen from "~/screens/ClientScreen";
+import DatePickScreen from "~/screens/DatePickScreen";
+
 import {initializeDB} from "~/database/database";
 import {SQLiteProvider} from "expo-sqlite";
 
@@ -18,6 +20,7 @@ export default function App() {
 				<Stack.Navigator>
 					<Stack.Screen name="Home" component={HomeScreen} />
 					<Stack.Screen name="Client" component={ClientScreen} />
+					<Stack.Screen name="DatePick" component={DatePickScreen} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</SQLiteProvider>

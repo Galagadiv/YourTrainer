@@ -24,7 +24,6 @@ import {
 
 export function InsertName({id}) {
 	const db = useSQLiteContext();
-	const navigation = useNavigation();
 	const [name, setName] = useState("");
 
 	useFocusEffect(
