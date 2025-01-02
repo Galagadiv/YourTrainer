@@ -29,25 +29,80 @@ export default function DatePickScreen({route}) {
 	const navigator = useNavigation();
 	const [selectedDate, setSelectedDate] = useState("");
 
+	const [time, setTime] = useState("");
+
+	const handleTimeChange = (text) => {
+		// Видаляємо всі символи, крім цифр
+		const cleanText = text.replace(/[^0-9]/g, "");
+
+		// Форматуємо у вигляді "год:хв"
+		if (cleanText.length <= 2) {
+			setTime(cleanText); // До 2 цифр: тільки години
+		} else {
+			const hours = cleanText.slice(0, 2); // Перші 2 цифри - години
+			const minutes = cleanText.slice(2, 4); // Наступні 2 цифри - хвилини
+			if (parseInt(hours) < 23) {
+				if (parseInt(minutes) < 59) {
+					setTime(`${hours}:${minutes}`);
+				}
+			} else {
+				setTime("11:00");
+			}
+		}
+	};
+
 	return (
-		<View style={dataPickStyle.container}>
-			<View>
-				<Calendar
-					onDayPress={(day) => {
-						setSelectedDate(day.dateString);
-					}}
-					theme={{...dataPickStyle.calendar}}
-					dayComponent={({date, state}) => (
-						<DayItem
-							date={date}
-							state={state}
-							selectedDate={selectedDate} // Передаємо стан
-							setSelectedDate={setSelectedDate} // Передаємо функцію оновлення
-						/>
-					)}
+		<View style={[dataPickStyle.container, {flex: 1}]}>
+			<Calendar
+				firstDay={1} // Початок тижня з понеділка
+				onDayPress={(day) => {
+					setSelectedDate(day.dateString);
+				}}
+				style={basicTheme.container}
+				theme={{...dataPickStyle.calendar}}
+				dayComponent={({date, state}) => (
+					<DayItem
+						date={date}
+						state={state}
+						selectedDate={selectedDate} // Передаємо стан
+						setSelectedDate={setSelectedDate} // Передаємо функцію оновлення
+					/>
+				)}
+			/>
+			<View style={dataPickStyle.title}>
+				<TextInput
+					style={[
+						{
+							width: "100%",
+							height: 100,
+							justifyContent: "center",
+							textAlign: "center",
+							fontSize: 40,
+							letterSpacing: 5,
+						},
+						basicTheme.container,
+					]}
+					value={time}
+					onChangeText={handleTimeChange}
+					keyboardType="numeric" // Тільки цифри
+					maxLength={5} // Максимум 5 символів (години:хвилини)
+					placeholder="00:00"
+					placeholderTextColor="#999"
 				/>
+			</View>
+			<View
+				style={[basicTheme.container, {backgroundColor: basicTheme.fourth_cl}]}
+			>
+				<Text style={basicTheme.text}>
+					Дата тренування: {selectedDate} {time}
+				</Text>
+			</View>
+			<View style={{flexDirection: "row"}}>
 				<TouchableOpacity onPress={() => navigator.goBack()}>
-					<Text style={dataPickStyle.emptyDataText}>Закрити</Text>
+					<Text style={dataPickStyle.emptyDataText}>Скасувати</Text>
+				</TouchableOpacity>
+				<TouchableOpacity onPress={() => navigator.goBack()}>
+					<Text style={dataPickStyle.emptyDataText}>Додати</Text>
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -104,7 +159,7 @@ const dataPickStyle = StyleSheet.create({
 		selectedDayBackgroundColor: basicTheme.main_cl,
 		selectedDayTextColor: basicTheme.white_cl,
 	},
-	emptyDataText: {
-		fontSize: 20,
+	title: {
+		backgroundColor: basicTheme.fourth_cl,
 	},
 });

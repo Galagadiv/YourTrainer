@@ -18,4 +18,9 @@ export const basicTheme = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: 500,
 	},
+	container: {
+		paddingVertical: 6,
+		paddingHorizontal: 4,
+		borderBottomWidth: 0.5,
+	},
 });

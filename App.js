@@ -10,6 +10,7 @@ import DatePickScreen from "~/screens/DatePickScreen";
 
 import {initializeDB} from "~/database/database";
 import {SQLiteProvider} from "expo-sqlite";
+import {basicTheme} from "./app/utils/theme";
 
 const Stack = createNativeStackNavigator();
 
@@ -18,9 +19,51 @@ export default function App() {
 		<SQLiteProvider databaseName="defaultDB.db" onInit={initializeDB}>
 			<NavigationContainer>
 				<Stack.Navigator>
-					<Stack.Screen name="Home" component={HomeScreen} />
-					<Stack.Screen name="Client" component={ClientScreen} />
-					<Stack.Screen name="DatePick" component={DatePickScreen} />
+					<Stack.Screen
+						name="Home"
+						component={HomeScreen}
+						options={{
+							title: "Головна сторінка",
+							headerStyle: {
+								backgroundColor: basicTheme.main_cl, // Колір фону заголовка
+							},
+							headerTintColor: basicTheme.white_cl, // Колір тексту і кнопок у заголовку
+							headerTitleStyle: {
+								fontWeight: "bold", // Стиль тексту
+								fontSize: 20,
+							},
+						}}
+					/>
+					<Stack.Screen
+						name="Client"
+						component={ClientScreen}
+						options={{
+							title: "Клієнт",
+							headerStyle: {
+								backgroundColor: basicTheme.main_cl, // Колір фону заголовка
+							},
+							headerTintColor: basicTheme.white_cl, // Колір тексту і кнопок у заголовку
+							headerTitleStyle: {
+								fontWeight: "bold", // Стиль тексту
+								fontSize: 20,
+							},
+						}}
+					/>
+					<Stack.Screen
+						name="DatePick"
+						component={DatePickScreen}
+						options={{
+							title: "Оберіть дату тренування",
+							headerStyle: {
+								backgroundColor: basicTheme.main_cl, // Колір фону заголовка
+							},
+							headerTintColor: basicTheme.white_cl, // Колір тексту і кнопок у заголовку
+							headerTitleStyle: {
+								fontWeight: "bold", // Стиль тексту
+								fontSize: 20,
+							},
+						}}
+					/>
 				</Stack.Navigator>
 			</NavigationContainer>
 		</SQLiteProvider>
